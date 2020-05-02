@@ -6,4 +6,9 @@ export default class App {
     this.search = new Search();
     this.listCards = new ListCards();
   }
+
+  init() {
+    this.search.init();
+    this.listCards.init();
+  }
 }
