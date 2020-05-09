@@ -160,7 +160,7 @@ export default class ListCards {
         }
         spinner(true);
       })
-      .catch((error) => {
+      .catch(() => {
         spinner(true);
       });
   }
