@@ -11,6 +11,7 @@ export default class Menu {
   }
 
   render() {
+    const DELAY = 500;
     Elem('div', '.menu__burger', Elem('div')).parent('.header .wrapper')
       .on('click', (event) => {
         this.activateMenu();
@@ -25,13 +26,12 @@ export default class Menu {
     Elem('ul', '.menu', list).parent('.header .wrapper');
     document.addEventListener('click', (event) => {
       if (this.active && !event.target.classList.contains('menu')) {
-        console.log(event.target);
         if (event.target.classList.contains('menu__item')) {
           this.changePointMenu(event.target);
         }
         setTimeout(() => {
           this.activateMenu(false);
-        }, 500);
+        }, DELAY);
       }
     });
   }

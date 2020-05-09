@@ -1,7 +1,6 @@
 import Search from './Search';
 import ListCards from './ListCards';
 import Menu from './Menu';
-// import Keyboard from './Keyboard';
 
 export default class App {
   constructor() {
@@ -16,7 +15,6 @@ export default class App {
     this.menu.init();
 
     this.search.input.value = 'Dream';
-    // Search.handleInput();
     this.search.handleInput();
     this.search.input.focus();
   }

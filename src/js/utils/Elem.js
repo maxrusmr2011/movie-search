@@ -15,7 +15,6 @@
  */
 
 export default function Elem(...arg) {
-  // ['a'/objEl, '.class', objEl/arrEl/'<img>'/'text']
   if (!new.target) return new Elem(...arg);
   const [nameElem, classStr, content] = arg;
   if (typeof nameElem === 'string') {

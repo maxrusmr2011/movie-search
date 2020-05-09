@@ -26,8 +26,5 @@ export default function getCardsApi({ title, id, page }) {
       const text = title || id;
       message(err, ` searching movie "${text}" `);
       return Promise.reject();
-    
-      // message(error, 'movie');
     });
-  // return Promise.resolve({ list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] });
 }

@@ -1,9 +1,7 @@
 import Elem from './utils/Elem';
 import translate from './translate';
+import message from './message';
 import Keyboard from './keyboard/Keyboard';
-
-// import message from './message';
-// import getCardsApi from './omdb';
 
 export default class Search {
   constructor() {
@@ -23,9 +21,6 @@ export default class Search {
       .attr([['placeholder', 'Search movie...']])
       .on('keydown', (event) => {
         if (event.code === 'Enter') {
-          // Search.handleInput();
-          console.log('enter this', this);
-          
           this.handleInput();
         }
       }).native;
@@ -55,8 +50,6 @@ export default class Search {
   }
 
   handleInput() {
-    // const self = window.app.search;
-    console.log('value=', this);
     if (this.input.value) {
       this.inputText = this.input.value.toLowerCase();
       if (this.isRussianSentence()) {
@@ -67,28 +60,7 @@ export default class Search {
             window.app.listCards.findMovies();
           })
           .catch((error) => {
-          //   console.log('do not translate');
-          });
-      } else {
-        window.app.listCards.findMovies();
-      }
-    }
-  }
-
-  static handleInput1() {
-    const self = window.app.search;
-    console.log('value=', self.input.value);
-    if (self.input.value) {
-      self.inputText = self.input.value.toLowerCase();
-      if (self.isRussianSentence()) {
-        self.translateSentence()
-          .then((res) => {
-            self.inputText = res;
-            self.input.value = res;
-            window.app.listCards.findMovies();
-          })
-          .catch((error) => {
-          //   console.log('do not translate');
+            message(error, ' translate ');
           });
       } else {
         window.app.listCards.findMovies();
@@ -99,18 +71,11 @@ export default class Search {
   static isRussian(text) {
     const LETTER_RU = { first: 'а', last: 'я' };
     return text.split('').every((letter) => letter >= LETTER_RU.first && letter <= LETTER_RU.last);
-    // return text.split('').every((letter) => letter >= 'а' && letter <= 'я');
   }
 
   isRussianSentence() {
     const arrWords = this.inputText.split(' ');
-    const indexRu = arrWords.findIndex((item) => {
-      const a = Search.isRussian(item);
-      console.log('is Rus1=', a);
-      return a;
-    });
-    console.log('rus N=', indexRu);
-    
+    const indexRu = arrWords.findIndex((item) => Search.isRussian(item));
     return indexRu >= 0;
   }
 

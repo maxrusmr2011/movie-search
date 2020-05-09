@@ -1,7 +1,6 @@
 import Elem from '../utils/Elem';
 import * as KEY from './lang/index';
 import Key from './Key';
-import Search from '../Search';
 
 export default class Keyboard {
   constructor(targetInput) {
@@ -14,6 +13,7 @@ export default class Keyboard {
       shift: false,
       capsLock: false,
     };
+    this.clickedKey = {};
   }
 
   init() {
@@ -57,23 +57,40 @@ export default class Keyboard {
   clickKey(event) {
     const nativeKey = event.target.closest('.keyboard__key');
     if (nativeKey) {
+      const keyCode = nativeKey.referenceKey.code;
       if (event.type === 'mousedown') {
-        Elem(nativeKey).cls('.key-active');
         this.workKey(nativeKey);
+        this.clickedKey[keyCode] = new Date().getTime();
       } else {
-        Elem(nativeKey).cls('_key-active');
-        if (nativeKey.referenceKey.code === 'ShiftLeft'
-        || nativeKey.referenceKey.code === 'ShiftRight') {
-          this.fn.shift = false;
-          this.changeLetters();
+        const DELAY = { key: 100, shift: 700 };
+        let time = DELAY.key;
+        if (keyCode === 'ShiftLeft' || keyCode === 'ShiftRight') {
+          time = DELAY.shift;
         }
-        this.targetInput.focus();
+        if (new Date().getTime() - this.clickedKey[keyCode] > time) {
+          this.deActiveKey(nativeKey);
+        } else {
+          setTimeout(() => {
+            this.deActiveKey(nativeKey);
+          }, time);
+        }
       }
     }
   }
 
+  deActiveKey(objKey) {
+    Elem(objKey).cls('_key-active');
+    if (objKey.referenceKey.code === 'ShiftLeft' || objKey.referenceKey.code === 'ShiftRight') {
+      this.fn.shift = false;
+      this.changeLetters();
+    }
+    delete this.clickedKey[objKey.referenceKey.code];
+    this.targetInput.focus();
+  }
+
   workKey(objKey) {
     const dir = { left: false, right: true };
+    Elem(objKey).cls('.key-active');
     switch (objKey.referenceKey.code) {
       case 'lang': this.changeLang();
         break;
@@ -86,7 +103,6 @@ export default class Keyboard {
         this.changeLetters();
         break;
       case 'Enter':
-        // Search.handleInput();
         window.app.search.handleInput();
         break;
       case 'Space':

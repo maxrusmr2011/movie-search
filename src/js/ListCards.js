@@ -19,19 +19,14 @@ export default class ListCards {
   init() {
     this.render();
     this.runSwiper();
-    console.log(this.starImg);
   }
 
   runSwiper() {
     this.mySwiper = new Swiper('.swiper-container', {
-      // direction: 'horizontal',
-      // slidesOffsetBefore: 50,
-      // slidesOffsetAfter: 50,
       loop: false,
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
-        // hideOnClick: true,
       },
       scrollbar: {
         el: '.swiper-scrollbar',
@@ -58,10 +53,10 @@ export default class ListCards {
       },
       on: {
         slideNextTransitionEnd: () => {
+          const LAST_PAGES = 2;
           const count = Math.ceil((this.listData.length - this.mySwiper.activeIndex)
             / this.mySwiper.params.slidesPerView);
-          if (count === 2 && this.countAllCards > this.listData.length) {
-            console.log('run next list', this.mySwiper.params.slidesPerView);
+          if (count === LAST_PAGES && this.countAllCards > this.listData.length) {
             this.findMovies(true);
           }
         },
@@ -83,7 +78,8 @@ export default class ListCards {
   }
 
   renderListCard(add) {
-    console.log(3, add);
+    const FIRST_PAGE = 1;
+    const FIRST_SLIDE = 0;
     const list = add.map((item) => this.renderCard(item));
     if (this.currentPage === 1) {
       this.listData = [];
@@ -94,30 +90,34 @@ export default class ListCards {
     this.listData.push(...add);
     if (this.mySwiper) {
       this.mySwiper.update();
-      if (this.currentPage === 1) {
-        this.mySwiper.slideTo(0);
+      if (this.currentPage === FIRST_PAGE) {
+        this.mySwiper.slideTo(FIRST_SLIDE);
       }
     }
   }
 
   static getImgSrc(imageSrc) {
+    if (imageSrc.slice(0, 4) !== 'http') {
+      return Promise.reject();
+    }
     return fetch(imageSrc)
-      .then((res) => res.blob())
-      .then((blob) => URL.createObjectURL(blob));
+      .catch(() => Promise.reject());
   }
 
   renderCard(info) {
+    const DELAY_LOAD = 1000;
     const title = Elem('div', '.card__title', info.Title);
     const img = Elem('img', '.card__img').prop([['alt', 'Poster']]);
     ListCards.getImgSrc(info.Poster)
+      .then((res) => res.blob())
+      .then((blob) => URL.createObjectURL(blob))
       .then((objImgURL) => {
         img.prop([['src', objImgURL]]);
         setTimeout(() => {
           if (img.native.naturalWidth > img.native.naturalHeight) {
             img.cls('.landscape');
           }
-          console.log('h=',img.native.naturalHeight, 'w=',img.native.naturalWidth);
-        }, 1000);
+        }, DELAY_LOAD);
       })
       .catch(() => {
         img.prop([['src', this.patchImg.src]]).attr([['style', 'opacity: 0.3']]);
@@ -132,7 +132,6 @@ export default class ListCards {
   renderRating(id, target) {
     getCardsApi({ id })
       .then((res) => {
-        // console.log('res id =',this.starImg);
         const star = Elem('img').prop([['src', this.starImg.src], ['alt', 'star']]);
         const rate = Elem('span', false, res.imdbRating);
         Elem(target, false, [star, rate]);
@@ -146,31 +145,22 @@ export default class ListCards {
     if (nextPage) {
       request.page = this.currentPage + 1;
     }
-    console.log(1, request);
     getCardsApi(request)
       .then((res) => {
         if (res.Response === 'True') {
           if (nextPage) {
             this.currentPage += 1;
-            // this.listData.push(...res.Search);
           } else {
             this.countAllCards = Number(res.totalResults);
             this.currentPage = 1;
-            // this.listData = res.Search;
           }
-          console.log(2, res);
           this.renderListCard(res.Search);
-          console.log(this.listData);
         } else {
           message(res.Error, ` searching movie "${request.title}" `);
         }
         spinner(true);
       })
       .catch((error) => {
-        // message(error, 'movie2');
-        console.log('error findMovie');
-        console.log(JSON.stringify(error));
-        console.log(error);
         spinner(true);
       });
   }
