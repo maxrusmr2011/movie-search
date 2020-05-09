@@ -1,6 +1,4 @@
-
 .footer {
-  // height: 30px;
   background: #000000;
   color: #ffffff;
   &__github {
@@ -12,16 +10,14 @@
       &:hover {
         text-decoration: underline;
       }
-  
     }
   }
-}
-
-.footer .wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 40px;
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+  }
 }
 
 .github__icon  {

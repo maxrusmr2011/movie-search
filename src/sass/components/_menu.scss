@@ -9,7 +9,6 @@
   top: 7px;
   width: 30px;
   height: 22px;
-  // border: 1px solid red;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -44,13 +43,11 @@
   left: -5px;
   top: 42px;
   height: 0;
-  // padding: 20px 30px;
   background: #000000;
   list-style: none;
   color: #ffffff;
   overflow: hidden;
   transition: 0.5s linear;
-  // box-sizing: border-box;
   &-active {
     height: 220px;
   }
@@ -78,5 +75,4 @@
       color: greenyellow;
     }
   }
-  
 }
