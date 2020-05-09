@@ -1,0 +1,12 @@
+
+@keyframes spinner {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(3);
+  }
+}
+.spinner {
+  animation: 1s spinner infinite;
+}
