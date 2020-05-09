@@ -1,0 +1,116 @@
+@keyframes key {
+  0% {
+    display: block;
+    opacity: 0;
+  }
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+.keyboard {
+  position: relative;
+  z-index: 2;
+  max-width: 980px;
+  margin: 35px auto 0;
+  padding-top: 35px;
+  border: 1px solid #000000;
+  background: #ffffff;
+  color: #000000;
+  font-size: 1.5rem;
+  display: none;
+  opacity: 0;
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+  &__key {
+    position: relative;
+    margin: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #cccccc;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    background: transparent;
+    border: 0;
+    font-size: 1.5rem;
+  }
+
+  &-active {
+    animation: key 1s;
+    display: block;
+    opacity: 1;
+  }
+}
+
+.key {
+  &-lang,
+  &-small,
+  &-system-small {
+    flex: 0 0 6%;
+    position: relative;
+    &::before {
+      content: '';
+      padding-top: 100%;
+      float: left;
+    }
+    div {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      left: 0;
+      top: 0;
+    }
+  }
+  &-system {
+    flex-grow: 1;
+    background: #888888;
+    &-small {
+      background: #888888;
+    }
+  }
+  &-space {
+    flex-grow: 7;
+  }
+
+  &-lang {
+    background: green url(./src/assets/img/globe.png) no-repeat 100%/100%;
+    div {
+      color: #ffffff;
+      transform: translate(20%, 20%);
+      text-transform: capitalize;
+    }
+  }
+
+  &-active {
+    background: rgb(80, 140, 252);
+  }
+}
+
+.caps-mark {
+  color: #ffffff;
+}
+
+@media (max-width: 800px) {
+  .keyboard {
+    font-size: 2.2vw;
+    &__key {
+      margin: 1px;
+      border-radius: 2px;
+    }
+  }
+}
