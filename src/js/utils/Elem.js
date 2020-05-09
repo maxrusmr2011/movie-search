@@ -1,3 +1,19 @@
+/**
+ * @param 1 element
+ *  1: (string) 'div' as name new Node
+ *  2: (string) '.className' as querySelector
+ *  3: (HTMLElement)
+ *  4: (Elem)
+ * @param 2 class
+ *  1: (string) 'className' / '.className'
+ *  2: (string as array) 'className .className'
+ * @param 3 child
+ *  1: (string) 'text' / '<img..>'
+ *  2: (HTMLElement / Elem)
+ *  3: ([HTMLElement / Elem])
+ *
+ */
+
 export default function Elem(...arg) {
   // ['a'/objEl, '.class', objEl/arrEl/'<img>'/'text']
   if (!new.target) return new Elem(...arg);
@@ -9,14 +25,14 @@ export default function Elem(...arg) {
       this.native = document.createElement(nameElem);
     }
   } else {
-    this.native = nameElem;
+    this.native = nameElem.native ? nameElem.native : nameElem;
   }
   if (classStr) {
     let arrClass = classStr.split(' ');
-    arrClass = arrClass.map((item) => item.slice(1));
+    arrClass = arrClass.map((item) => (item[0] === '.' ? item.slice(1) : item));
     this.native.classList.add(...arrClass);
   }
-  if (content) {
+  if (content !== undefined) {
     if (typeof content === 'string') {
       this.native.innerHTML = content;
     } else if (Array.isArray(content)) {
@@ -60,8 +76,12 @@ Elem.prototype.cls = function cls(classStr) {
   return this;
 };
 
-Elem.prototype.parent = function parent(queryStr) {
-  document.querySelector(queryStr).append(this.native);
+Elem.prototype.parent = function parent(parentElement) {
+  if (typeof parentElement === 'string') {
+    document.querySelector(parentElement).append(this.native);
+  } else {
+    (parentElement.native || parentElement).append(this.native);
+  }
   return this;
 };
 
